@@ -28,7 +28,7 @@ library(circular)
 
 
 
-url_ucomp <- ("http://api.planetos.com/v1/datasets/noaa_gfs_pgrb2_global_forecast_recompute_0.25degree/area?polygon=[[-121.40,34.75],[-117.06,34.75],[-117.06,32.36],[-121.40,32.36],[-121.40,34.75]]&apikey=e5102ee5d77e422eaa5dea4124ba2165&csv=true&count=17000&variables=ugrd_m")
+url_ucomp <- ("http://api.planetos.com/v1/datasets/noaa_gfs_pgrb2_global_forecast_recompute_0.25degree/area?polygon=[[-121.40,34.75],[-117.06,34.75],[-117.06,32.36],[-121.40,32.36],[-121.40,34.75]]&apikey=e5102ee5d77e422eaa5dea4124ba2165&csv=true&count=500000&variables=ugrd_m")
 
 wind_u <- download.file(url_ucomp, here("data", "wind_u.csv"))
 
@@ -38,7 +38,7 @@ wind_u <- here("data", "wind_u.csv") %>%
 
 
 
-url_vcomp <- "http://api.planetos.com/v1/datasets/noaa_gfs_pgrb2_global_forecast_recompute_0.25degree/area?polygon=[[-121.40,34.75],[-117.06,34.75],[-117.06,32.36],[-121.40,32.36],[-121.40,34.75]]&apikey=e5102ee5d77e422eaa5dea4124ba2165&csv=true&count=17000&variables=vgrd_m"
+url_vcomp <- "http://api.planetos.com/v1/datasets/noaa_gfs_pgrb2_global_forecast_recompute_0.25degree/area?polygon=[[-121.40,34.75],[-117.06,34.75],[-117.06,32.36],[-121.40,32.36],[-121.40,34.75]]&apikey=e5102ee5d77e422eaa5dea4124ba2165&csv=true&count=500000&variables=vgrd_m"
 
 download.file(url_vcomp, here("data", "wind_v.csv"))
 
@@ -68,11 +68,13 @@ plus4_day <- as.character(Sys.Date()+4) %>%
   substring(8)
 
 
- dates_string <- paste(c(paste(plus3_day, "12:00:00"),paste(plus3_day, "15:00:00"),paste(plus3_day, "18:00:00"),
-                         paste(plus3_day, "21:00:00"),paste(plus3_day, "03:00:00"), paste(plus3_day, "06:00:00"), 
+ dates_string <- paste(c(paste(plus3_day, "03:00:00"), 
+                         paste(plus3_day, "06:00:00"), paste(plus3_day, "09:00:00"),paste(plus3_day, "12:00:00"),
+                         paste(plus3_day, "15:00:00"),paste(plus3_day, "18:00:00"), paste(plus3_day, "21:00:00"),
+                         paste(plus3_day, "03:00:00"), paste(plus3_day, "06:00:00"), 
                          paste(plus3_day, "09:00:00"), paste(plus4_day, "12:00:00"),paste(plus4_day, "15:00:00"),
                          paste(plus4_day, "18:00:00"),paste(plus4_day, "21:00:00"),paste(plus4_day, "03:00:00"), 
-                         paste(plus4_day, "06:00:00"), paste(plus4_day, "09:00:00")))
+                         paste(plus4_day, "06:00:00"), paste(plus4_day, "09:00:00")) , collapse = "|")
  
  
   wind_data_dates <- wind_data %>% 
@@ -211,6 +213,18 @@ wind.list = lapply(sort(unique(wind_ras_data$date)), function(i) {
   coord_sf(xlim = c(-121.45, -117.06), ylim = c(32.36, 34.75), expand = F)
 })
 
-wind.list[[1]]
+wind.list[[2]]
 
 ```
+```{r}
+w_dpi <- c(215)
+
+unlink("pngs/old/*")
+
+for(i in 1:length(wind.list)){
+  
+  ggsave(paste0(here('pngs', 'old'), "/", wind_ras_data$date[i], '.png'), dpi = w_dpi, 
+         bg = "transparent", plot = wind.list[[i]])
+}
+```
+
