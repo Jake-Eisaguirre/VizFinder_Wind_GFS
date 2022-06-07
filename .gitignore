@@ -2,3 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
+pngs/
+grib_u/
+grib_v/
+test.html
